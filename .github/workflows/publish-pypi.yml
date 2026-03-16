@@ -1,0 +1,38 @@
+# Publish vvz-theorydocs to PyPI on release.
+# Author: Vasiliy Zdanovskiy
+# email: vasilyvz@gmail.com
+#
+# Setup: Add secret PYPI_API_TOKEN in repo Settings → Secrets and variables → Actions.
+# Trigger: GitHub Release (published), or push tag v* (e.g. git tag v0.1.0 && git push --tags), or workflow_dispatch.
+# Secret: PYPI_API_TOKEN in repo Settings → Secrets.
+
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tools
+        run: pip install build twine
+
+      - name: Build package
+        run: python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}

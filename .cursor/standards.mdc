@@ -1,0 +1,58 @@
+---
+alwaysApply: true
+---
+
+## 1. Directory layout 
+
+```
+supernova/
+├── .git/
+├── .gitignore
+├── .venv/                    # Local venv (not committed)
+├── README.md
+├── pyproject.toml             # Build and PyPI metadata
+├── LICENSE
+│
+├── theorydocs/                 # Installable Python package (flat, at root)
+│   ├── __init__.py
+│   └── ...                     # Package modules
+│
+├── scripts/                   # Runnable pipeline scripts
+│
+├── data/                      # 
+│   ├──db                      # databases
+│   └──files                   # md files with theory
+│
+├── docs/                      # Documentation and task specs
+│   ├── README.md
+├── code_analysis/             # Optional: code_mapper indices (gitignored)
+└── tests/                     # Tests (optional)
+```
+
+- **No `src/`**: the installable package is `supernova_atomic/` at the repository root.
+- **Scripts**: standalone scripts in `scripts/`; can be invoked as `python scripts/...` or via entry points from the package.
+
+---
+
+## 2. Git setup
+
+- **Repository**: initialised in project root; no submodules required for this layout.
+- **Ignore**: `.gitignore` excludes:
+  - `.venv/`, `__pycache__/`, `*.pyc`, `.mypy_cache/`, `.ruff_cache/`
+  - `raw/`, `data/`, `plots/` — **data are never committed**; scripts create these dirs when needed
+  - `*.egg-info/`, `dist/`, `build/`, `code_analysis/`
+- **Branches**: default branch `main`; feature branches as needed.
+- **Commits**: one logical change per commit; no commits of generated data unless policy says so.
+
+---
+
+## 5. Publishing to PyPI (steps)
+
+1. Install build tools: `pip install build twine`
+2. From project root: `python -m build` → creates `dist/*.whl` and `dist/*.tar.gz`
+3. Upload: `twine upload dist/*` (or `twine upload --repository testpypi dist/*` for TestPyPI)
+4. Bump version in `pyproject.toml` and `supernova_atomic/__init__.py` for each release
+
+---
+
+

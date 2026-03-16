@@ -1,0 +1,17 @@
+# Include docs and project metadata for sdist.
+# Author: Vasiliy Zdanovskiy
+# email: vasilyvz@gmail.com
+
+include README.md
+include LICENSE
+include pyproject.toml
+recursive-include docs *.md *.yaml *.yml
+recursive-exclude .venv *
+recursive-exclude __pycache__ *
+recursive-exclude *.pyc *
+recursive-exclude .git *
+recursive-exclude .cursor *
+global-exclude *.egg-info
+global-exclude .eggs
+global-exclude dist
+global-exclude build
